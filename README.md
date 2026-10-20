@@ -1,4 +1,4 @@
-# 🍗 Broaster Go — Proyecto de Automatización de Pedidos, Caja y Stock
+#  Broaster Go — Proyecto de Automatización de Pedidos, Caja y Stock
 
 > **Universidad Privada del Norte (UPN)**  
 > **Curso:** Fundamentos de Programación  
@@ -7,7 +7,7 @@
 
 ---
 
-## 👥 Equipo de Desarrollo (Grupo 2)
+##  Equipo de Desarrollo (Grupo 2)
 
 | Integrante | Código | Rol y Responsabilidad en el Proyecto |
 | :--- | :---: | :--- |
@@ -19,7 +19,7 @@
 
 ---
 
-## 📌 1. Contexto del Proyecto y Problemática
+##  1. Contexto del Proyecto y Problemática
 
 En la gestión diaria de la pollería **"Broaster Go"** —cuyo objetivo operativo es entregar pollos a la brasa/broaster y complementos en **menos de 45 minutos** en horario continuo de `12:00 a 23:00` (con horas punta de `13:00–15:00` y `19:00–22:00`)—, los pedidos que ingresan por **WhatsApp, Instagram, llamadas telefónicas y formulario web** se registraban manualmente en un cuaderno y luego se transcribían a una hoja de Excel.
 
@@ -31,17 +31,17 @@ En la gestión diaria de la pollería **"Broaster Go"** —cuyo objetivo operati
 
 ---
 
-## 🔄 2. Análisis del Problema (Modelo IPO: Entradas, Procesos y Salidas)
+##  2. Análisis del Problema (Modelo IPO: Entradas, Procesos y Salidas)
 
 ```mermaid
 flowchart LR
-    subgraph INPUT ["📥 ENTRADAS (Input)"]
+    subgraph INPUT ["ENTRADAS (Input)"]
         I1["Datos del cliente\n(Código/DNI, Nombre, Correo,\nTeléfono, Dirección, Zona)"]
         I2["Selección de productos\n(Código, Cantidad, Precio)"]
         I3["Cupón de descuento y\nForma de pago (Yape, Plin,\nEfectivo, Tarjeta)"]
     end
 
-    subgraph PROCESS ["⚙️ PROCESOS (Reglas de Negocio)"]
+    subgraph PROCESS ["PROCESOS (Reglas de Negocio)"]
         P1["1. Validar cantidad > 0"]
         P2["2. Validar stock disponible\n(cantidad ≤ stock)"]
         P3["3. Validar precio unitario > 0"]
@@ -50,11 +50,11 @@ flowchart LR
         P1 --> P2 --> P3 --> P4 --> P5
     end
 
-    subgraph OUTPUT ["📤 SALIDAS (Output)"]
-        O1["🧾 Comprobante / Boleta final\ncon desglose y total a pagar"]
-        O2["👨‍🍳 Comanda formateada\npara el Panel de Cocina"]
-        O3["📧 Notificación de confirmación\nal cliente"]
-        O4["⚠️ Registro de observaciones /\nerrores y Cierre de Caja"]
+    subgraph OUTPUT ["SALIDAS (Output)"]
+        O1["Comprobante / Boleta final\ncon desglose y total a pagar"]
+        O2["Comanda formateada\npara el Panel de Cocina"]
+        O3["Notificación de confirmación\nal cliente"]
+        O4["Registro de observaciones /\nerrores y Cierre de Caja"]
     end
 
     INPUT --> PROCESS --> OUTPUT
@@ -69,7 +69,7 @@ flowchart LR
 
 ---
 
-## 📂 3. Estructura del Repositorio e Implementación en Python
+## 3. Estructura del Repositorio e Implementación en Python
 
 El repositorio contiene los prototipos funcionales desarrollados en **Python 3** (sin dependencias externas), abarcando la programación orientada a objetos (POO), la validación en consola y la interfaz gráfica con `Tkinter`:
 
@@ -81,7 +81,7 @@ El repositorio contiene los prototipos funcionales desarrollados en **Python 3**
 
 ---
 
-## 🚀 4. Ejecución y Pruebas de Calidad (Terminal)
+## 4. Ejecución y Pruebas de Calidad (Terminal)
 
 ### Requisitos
 - **Python 3.10 o superior** (incluye `tkinter` en la biblioteca estándar).
@@ -147,7 +147,7 @@ Cliente: Daniel (529592)
 
 ---
 
-## ⚖️ 5. Cuadro Comparativo de Alternativas y Justificación
+## 5. Cuadro Comparativo de Alternativas y Justificación
 
 Durante el diseño se evaluaron tres alternativas tecnológicas para la pollería:
 
@@ -160,7 +160,7 @@ Durante el diseño se evaluaron tres alternativas tecnológicas para la pollerí
 
 ---
 
-## 📐 6. Reglas de Negocio y Diseño Arquitectónico
+## 6. Reglas de Negocio y Diseño Arquitectónico
 
 ### 6.1 Reglas de Negocio del Algoritmo
 
@@ -193,7 +193,7 @@ Durante el diseño se evaluaron tres alternativas tecnológicas para la pollerí
 
 ---
 
-## ✅ 7. Trazabilidad de Soluciones y Conclusiones
+## 7. Trazabilidad de Soluciones y Conclusiones
 
 | N.º | Problema del Registro Manual | Solución Implementada en el Sistema |
 | :---: | :--- | :--- |
