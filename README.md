@@ -75,9 +75,12 @@ El repositorio contiene los prototipos funcionales desarrollados en **Python 3**
 
 | Archivo | Descripción |
 | :--- | :--- |
-| [`broaster_go_pedidos.py`](./broaster_go_pedidos.py) | **Prototipo Principal POO (Control de Stock + Boleta + Cocina):** Implementa las clases `Cliente`, `Producto` y `SistemaPedidos` (`@staticmethod procesar_pedido`). Valida cantidades, precios y disponibilidad de stock en tiempo real, descuenta inventario y emite las 4 salidas: Boleta, Notificación por correo, Comanda de Cocina y Reporte de Observaciones. |
+| [`broaster_go_pedidos.py`](./broaster_go_pedidos.py) | **Prototipo Principal POO (Control de Stock + Boleta + Cocina + Cierre de Caja):** Implementa las clases `Cliente`, `Producto` y `SistemaPedidos` (`@staticmethod procesar_pedido`). Aplica las reglas **R1 a R8** (cantidad, precio, stock, pedido mínimo y tarifa de delivery por zona, cupones, forma de pago y alerta de stock mínimo), valida los datos del cliente, permite registrar varios pedidos seguidos y termina con el **cierre de caja** del día. |
 | [`broaster_go.py`](./broaster_go.py) | **Prototipo de Mostrador en Consola (CLI):** Menú interactivo de combos, validación de entradas numéricas, aplicación de cupones porcentuales de descuento y desglose de **IGV (18%)**. |
-| [`broaster_go_gui.py`](./broaster_go_gui.py) | **Prototipo con Interfaz Gráfica (`Tkinter`):** Ventana interactiva de escritorio con selector desplegable (`ttk.Combobox`), lista de ítems en vivo y cálculo inmediato de subtotal, IGV y descuentos en menos de 1 minuto. |
+| [`broaster_go_gui.py`](./broaster_go_gui.py) | **Prototipo con Interfaz Gráfica (`Tkinter`):** Clase `VentanaPedido` con selector desplegable (`ttk.Combobox`), lista de ítems, subtotal en vivo, botón para quitar artículos, validación del descuento (0–100 %) y limpieza automática al finalizar cada pedido. |
+| [`calculos.py`](./calculos.py) | **Módulo compartido:** carta, IGV y cálculo de totales que usan la consola y la ventana (así no se repite el código). El descuento se aplica **antes** del IGV. |
+| [`test_pedidos.py`](./test_pedidos.py) / [`test_calculos.py`](./test_calculos.py) | **Pruebas automáticas (`unittest`):** 24 casos que verifican las reglas R1–R8, la validación del cliente, el cierre de caja y los cálculos de IGV y descuento. |
+| [`docs/Mejoras_BroasterGo.pdf`](./docs/Mejoras_BroasterGo.pdf) | Guía breve de las mejoras agregadas al proyecto. |
 
 ---
 
@@ -101,14 +104,29 @@ python broaster_go_gui.py
 python broaster_go.py
 ```
 
+### Ejecutar las pruebas automáticas
+```bash
+python -m unittest -v
+```
+Si todo está bien, al final aparece `Ran 24 tests ... OK`.
+
+### Datos para probar `broaster_go_pedidos.py`
+| Regla | Valores |
+| :--- | :--- |
+| Zonas de delivery (R5) | `A` = S/ 3.00, `B` = S/ 5.00, `C` = S/ 8.00 |
+| Pedido mínimo para delivery (R4) | S/ 25.00 |
+| Cupones (R6) | `BROASTER10` (10 %), `FAMILIA15` (15 %) |
+| Formas de pago (R7) | Efectivo, Yape, Plin, Tarjeta |
+| Alerta de stock (R8) | cuando quedan 3 unidades o menos |
+
 ### Evidencia de Ejecución (`broaster_go_pedidos.py`)
-Prueba integral validada por el equipo reproduciendo el flujo completo de atención:
+Pedido con delivery a la zona B, cupón `FAMILIA15` y pago con Yape. Al terminar se muestra la alerta de stock mínimo y el cierre de caja:
 
 ```text
 === BROASTER GO - Nuevo Pedido ===
 Código del cliente: 529592
 Nombre del cliente: Daniel
-Correo del cliente: alexandertejadaparedes@gmai.com
+Correo del cliente: alexandertejadaparedes@gmail.com
 
 --- Menú disponible ---
 P001 - Pieza de Pollo Broaster - S/ 8.50 - Stock: 10
@@ -118,31 +136,74 @@ P004 - Gaseosa 500ml - S/ 4.00 - Stock: 20
 
 Ingresa los productos del pedido. Escribe 'fin' para terminar.
 
-Código de producto: P001
-Cantidad de 'Pieza de Pollo Broaster': 1
+Código de producto: P002
+Cantidad de 'Combo 2 Piezas + Papas': 4
 
-Código de producto: P004
-Cantidad de 'Gaseosa 500ml': 1
+Código de producto: P003
+Cantidad de 'Papas Fritas': 2
 
 Código de producto: fin
 
+¿Es para delivery? (S/N): S
+Zonas (pedido mínimo S/ 25.00):
+ Zona A: S/ 3.00
+ Zona B: S/ 5.00
+ Zona C: S/ 8.00
+Zona: B
+
+Cupón de descuento (Enter si no tiene): FAMILIA15
+
+Formas de pago:
+ 1. Efectivo
+ 2. Yape
+ 3. Plin
+ 4. Tarjeta
+Elige una opción: 2
+
 ==========================================
-=== BOLETA - BROASTER GO ===
+=== BOLETA N.º 0001 - BROASTER GO ===
 ==========================================
 Cliente: Daniel (529592)
 
  Productos Confirmados:
- - Pieza de Pollo Broaster x1 - S/ 8.50
- - Gaseosa 500ml x1 - S/ 4.00
+ - Combo 2 Piezas + Papas x4 - S/ 72.00
+ - Papas Fritas x2 - S/ 12.00
 
- Total a pagar: S/ 12.50
+ Subtotal:  S/ 84.00
+ Descuento: -S/ 12.60 (cupón FAMILIA15, 15%)
+ Delivery:  S/ 5.00 (zona B)
+ Total a pagar: S/ 76.40  (Yape)
 
  Notificación de confirmación:
- Enviado a: alexandertejadaparedes@gmai.com
+ Enviado a: alexandertejadaparedes@gmail.com
 
  Pedido enviado al Panel de Cocina:
- - 1 x Pieza de Pollo Broaster
- - 1 x Gaseosa 500ml
+ - 4 x Combo 2 Piezas + Papas
+ - 2 x Papas Fritas
+
+ ALERTA de stock mínimo (reponer pronto):
+ - Combo 2 Piezas + Papas: solo quedan 1
+
+¿Registrar otro pedido? (S/N): N
+
+==========================================
+=== CIERRE DE CAJA - BROASTER GO ===
+==========================================
+Pedidos confirmados: 1
+Pedidos rechazados:  0
+Total vendido:       S/ 76.40
+
+Ventas por forma de pago:
+ - Efectivo: S/ 0.00
+ - Yape: S/ 76.40
+ - Plin: S/ 0.00
+ - Tarjeta: S/ 0.00
+
+Stock final:
+ - Pieza de Pollo Broaster: 10
+ - Combo 2 Piezas + Papas: 1
+ - Papas Fritas: 13
+ - Gaseosa 500ml: 20
 ```
 
 ---

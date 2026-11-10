@@ -1,0 +1,11 @@
+# Archivos que Python genera solo (no se suben al repositorio)
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Configuracion de editores
+.vscode/
+.idea/
